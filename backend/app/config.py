@@ -19,6 +19,9 @@ class Settings(BaseSettings):
     # --- web ---
     # Comma-separated list of frontend origins allowed to call the API.
     cors_origins: str = "http://localhost:5173,http://127.0.0.1:5173"
+    # Optional regex for origins that change, e.g. Vercel preview deployments:
+    #   https://music-player(-[a-z0-9-]+)?\.vercel\.app
+    cors_origin_regex: str | None = None
     # Optional: path to the built frontend (frontend/dist) to serve it from this server too.
     frontend_dist: Path | None = None
 
@@ -37,7 +40,7 @@ class Settings(BaseSettings):
             raise ValueError("SECRET_KEY must be a random string of 32+ characters (openssl rand -hex 32)")
         return v
 
-    @field_validator("frontend_dist", "ytdlp_cookies_file", "ytdlp_proxy", mode="before")
+    @field_validator("frontend_dist", "ytdlp_cookies_file", "ytdlp_proxy", "cors_origin_regex", mode="before")
     @classmethod
     def empty_is_none(cls, v):
         return v or None

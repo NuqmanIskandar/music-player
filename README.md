@@ -102,9 +102,22 @@ cd ../frontend && npm ci && npm run build
 sudo systemctl restart music-player
 ```
 
-### Frontend hosted somewhere else (optional)
+### Frontend on Vercel (optional)
 
-Set `VITE_API_URL=https://your-backend-domain` in `frontend/.env` before `npm run build`, and add the frontend's address to `CORS_ORIGINS` in `backend/.env`. An HTTPS frontend can't call an `http://` backend, because browsers block mixed content.
+The backend **must have HTTPS** (a domain + Caddy). Vercel is HTTPS-only, and browsers block an HTTPS page from calling an `http://` API.
+
+1. **Vercel → Add New → Project →** import the GitHub repo, then set:
+   - **Root Directory:** `frontend`. Vercel then detects Vite, so the build command is `npm run build` and the output folder is `dist`.
+   - **Environment Variables:** `VITE_API_URL` = `https://your-backend-domain` (no trailing slash)
+2. **On the VPS**, allow the Vercel URLs in `backend/.env`, then `sudo systemctl restart music-player`:
+   ```
+   CORS_ORIGINS=https://<project>.vercel.app,http://localhost:5173
+   CORS_ORIGIN_REGEX=https://<project>(-[a-z0-9-]+)?\.vercel\.app
+   ```
+   The regex also covers preview deployments (`<project>-git-<branch>-<user>.vercel.app`).
+3. Each push to GitHub redeploys the frontend automatically. If you change `VITE_API_URL`, **redeploy**: it's baked in at build time.
+
+With the frontend on Vercel, leave `FRONTEND_DIST` empty on the VPS.
 
 ---
 
