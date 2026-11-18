@@ -1,0 +1,18 @@
+# Secrets / local settings (each app has a committed .env.example instead)
+.env
+.env.*
+!.env.example
+cookies.txt
+
+# Python
+.venv/
+__pycache__/
+
+# Node
+node_modules/
+dist/
+
+# App data: downloaded MP3s, covers, database
+backend/storage/
+
+.DS_Store

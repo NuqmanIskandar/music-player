@@ -1,0 +1,10 @@
+# Caddy = HTTPS in front of the backend, with free automatic certificates.
+# Install Caddy (https://caddyserver.com/docs/install), then:
+#   sudo cp Caddyfile /etc/caddy/Caddyfile && sudo systemctl reload caddy
+#
+# Replace the domain below with yours. Its DNS "A" record must point to the VPS IP.
+# (No domain? A free subdomain from duckdns.org works.)
+
+music.example.com {
+	reverse_proxy 127.0.0.1:8000
+}

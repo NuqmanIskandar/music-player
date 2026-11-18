@@ -1,0 +1,15 @@
+[project]
+name = "music-player-backend"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.163.2",
+    "imageio-ffmpeg>=0.8.1",
+    "pwdlib[argon2]>=0.4.2",
+    "pydantic-settings>=2.16.3",
+    "pyjwt>=2.15.1",
+    "uvicorn[standard]>=0.54.0",
+    "yt-dlp[default]>=2026.10.26",
+]

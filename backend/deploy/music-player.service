@@ -1,0 +1,26 @@
+# systemd service: keeps the backend running and restarts it on crash/reboot.
+# Install:  sudo cp music-player.service /etc/systemd/system/
+#           sudo systemctl daemon-reload && sudo systemctl enable --now music-player
+# Logs:     journalctl -u music-player -f
+#
+# Adjust User and the paths if you cloned somewhere other than /opt/music-player.
+
+[Unit]
+Description=Music Player backend (FastAPI)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=music
+WorkingDirectory=/opt/music-player/backend
+# deno (for YouTube) and uv are installed per-user, so put them on PATH.
+Environment=PATH=/home/music/.deno/bin:/home/music/.local/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PYTHONUNBUFFERED=1
+# Single process on purpose: download progress is kept in memory.
+# --host 127.0.0.1 when Caddy sits in front (recommended). Use 0.0.0.0 to expose port 8000 directly.
+ExecStart=/home/music/.local/bin/uv run --frozen uvicorn app.main:app --host 127.0.0.1 --port 8000 --proxy-headers
+Restart=always
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target
