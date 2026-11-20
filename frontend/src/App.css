@@ -3,8 +3,10 @@
 .app {
   display: grid;
   grid-template-columns: var(--sidebar-w) 1fr;
-  grid-template-rows: 1fr var(--player-h);
-  height: 100vh;
+  grid-template-rows: 1fr calc(var(--player-h) + var(--safe-bottom));
+  height: 100vh; /* fallback for old browsers */
+  height: 100dvh; /* the *visible* screen height; 100vh is taller on iPhone Safari */
+  padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
   overflow: hidden;
 }
 
@@ -1016,7 +1018,7 @@
   display: flex;
   flex-direction: column;
   width: min(560px, 100%);
-  max-height: min(720px, calc(100vh - 48px));
+  max-height: min(720px, calc(100dvh - 48px));
   border-radius: 20px;
   box-shadow: var(--shadow-lg);
   animation: pop 0.18s ease-out;
@@ -1145,7 +1147,7 @@
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 1fr);
   align-items: center;
   gap: 24px;
-  padding: 0 24px;
+  padding: 0 24px var(--safe-bottom);
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(20px);
 }
@@ -1301,7 +1303,7 @@
 .toast {
   position: fixed;
   left: 50%;
-  bottom: calc(var(--player-h) + 20px);
+  bottom: calc(var(--player-h) + var(--safe-bottom) + 20px);
   transform: translateX(-50%);
   z-index: 200;
   padding: 10px 18px;
@@ -1356,7 +1358,7 @@
   }
   .app {
     grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr var(--player-h);
+    grid-template-rows: auto 1fr calc(var(--player-h) + var(--safe-bottom));
   }
   .sidebar {
     flex-direction: row;
@@ -1416,7 +1418,7 @@
   .player {
     grid-template-columns: 1fr;
     gap: 6px;
-    padding: 10px 16px;
+    padding: 10px 16px calc(10px + var(--safe-bottom));
   }
   .grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
